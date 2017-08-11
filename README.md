@@ -1,2 +1,3 @@
-# snack
-Simple snack software
+# Snackbar
+
+WIP
