@@ -57,8 +57,7 @@ class App extends React.Component<IOwnProps & IConnProps & IConnDispatches, IOwn
     return (
       <BrowserRouter>
         <Switch>
-          <Route path='/' render={ () => (this.props.user.email != null)? <SnackBar />  : (<p>Logueate papu</p>) }/>
-          <Route path='/home' component={SnackBar} />
+          <Route path='/' component={SnackBar}/>
         </Switch>
       </BrowserRouter>
     );

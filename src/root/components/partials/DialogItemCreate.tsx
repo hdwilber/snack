@@ -20,7 +20,7 @@ import AddIcon from 'material-ui-icons/Add'
 import RemoveIcon from 'material-ui-icons/Remove';
 import GridList, {GridListTile, GridListTileBar}from 'material-ui/GridList'
 import IconButton from 'material-ui/IconButton'
-import {FormLabel} from 'material-ui/Form'
+import {FormLabel, FormControlLabel} from 'material-ui/Form'
 
 //import {fileUpload} from './../../../actions/file-upload'
 //import {itemCreate, itemSave} from './../../../actions/item'
@@ -75,7 +75,7 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
   constructor(props) {
     super(props)
     this.state = ({
-      id: '34l',
+      id: '',
       name: '',
       description: '',
       quantity: 1,
@@ -96,20 +96,41 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
   };
 
   onChangeHandler = (e) => {
-
+    var aux = e.target.value;
+    switch(e.target.name) {
+      case 'quantity': 
+        this.setState({quantity: parseInt(aux)})
+      break;
+      case 'name': 
+        this.setState({name: aux})
+      break;
+    }
   }
 
   onChangeFIHandler = (e) => {
   }
-  appendFile = (e)=> {
 
+  appendFile = (e)=> {
+    var event = new MouseEvent('click', {
+      'view': window,
+      'bubbles': true,
+      'cancelable': true
+    });
+    this.fileInput.dispatchEvent(event);
+  }
+  handleRequestClose = () => {
+    return false;
   }
 
   render() {
     const { open, onRequestClose,  ...other } = this.props;
-    console.log(other);
+    //console.log(other);
     return (
-      <Dialog open={open} onRequestClose={this.handleRequestDiscard}>
+      <Dialog 
+        open={open} 
+        onRequestClose={this.handleRequestDiscard}
+        ignoreBackdropClick={true}
+      >
         <DialogTitle>
           Create a new Item 
         </DialogTitle>
@@ -122,14 +143,53 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
             type="text"
             fullWidth
            />
+          <FormLabel> 
+            Quantity: 
+          </FormLabel>
+          <input style={{flexGrow: 1}} name="quantity" type="range" min="1" max="50" step="1" onChange={this.onChangeHandler} />
+          <FormLabel>
+          {this.state.quantity}
+          </FormLabel>
+
+        <input style={{ opacity: 0 }} id="file" type="file" onChange={this.onChangeFIHandler} ref={(input) => {this.fileInput = input;}}
+        />
+          <FormLabel> 
+          Photos:
+          </FormLabel>
+        <Button style={{float: 'right'}} fab color="primary" aria-label="add"
+        onClick={this.appendFile}>
+          <AddIcon />
+        </Button>
+
+        <GridList cellHeight={160} cols={1}>
+        {this.state.images.map((val, i) => 
+           <GridListTile key={i} col={1}>
+           <img src={val} />
+            <GridListTileBar
+              title={i}
+              titlePosition="bottom"
+              actionIcon={
+                <IconButton>
+                  <RemoveIcon color="white" />
+                </IconButton>
+              }
+              actionPosition="right"
+            />
+
+           </GridListTile>
+
+          )}
+
+        </GridList>
+
         </DialogContent>
 
         <DialogActions>
           <Button onClick={this.handleRequestDiscard} color="primary">
-            Disagree
+            Discard
           </Button>
-          <Button onClick={this.handleRequestSave} color="primary">
-            Agree
+          <Button raised onClick={this.handleRequestSave} color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>

@@ -28,38 +28,31 @@ import AddBoxIcon from 'material-ui-icons/AddBox'
 import SettingsIcon from 'material-ui-icons/Settings'
 
 import DialogLogin from './partials/DialogLogin'
-import DialogItemCreate from './partials/DialogItemCreate';
 import {
   userLogin,
   userLogout 
 } from './../../actions/user';
 interface IOwnProps {
+  user: any;
+  onItemCreate: ()=>void;
+  onLogin: ()=> void;
+  onLogout: () => void;
 }
 interface IOwnState {
   viewSideMenu: boolean;
   viewDialogLogin: boolean;
-  viewDialogItemCreate: boolean;
 }
 interface IConnProps{
-  user: any;
 }
 interface IConnDispatches{
-  userLogin: (string)=>void;
-  userLogout: () => void;
 }
 
 function mapStateToProps(state) {
   return {
-    user: state.user
   };
 }
 function mapDispatchesToProps(dispatch) {
   return {
-    userLogin: (p: string) => dispatch(
-      userLogin(p)),
-    userLogout: () => dispatch(
-      userLogout()
-      )
   };
 }
 
@@ -68,7 +61,7 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
     super(props);
 
     console.log(props);
-    this.state = { viewDialogItemCreate: false, viewSideMenu: false, viewDialogLogin: false };
+    this.state = { viewSideMenu: false, viewDialogLogin: false };
   }
   handleSideMenu(e) {
     this.setState ({
@@ -80,43 +73,20 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
       viewSideMenu: false
     })
   }
-  handleDialogLoginClose = value => {
-    this.setState({ viewDialogLogin: false });
-    if (value) {
-      this.props.userLogin(value);
-    }
-  };
 
   handleLogout = () => {
-    console.log("There there ")
-    this.props.userLogout();
+    this.props.onLogout();
   }
 
-  handleDialogItemCreateClose = value => {
-    this.setState({ viewDialogItemCreate: false });
-    console.log(value);
-  }
   renderUserMenu() {
     var userMenu; 
     if (this.props.user.email != null) {
       userMenu = 
-        <div>
         <UserMenu user={this.props.user} onLogout={this.handleLogout}/>
-        <DialogItemCreate 
-        open={this.state.viewDialogItemCreate}
-        onRequestClose={this.handleDialogItemCreateClose}
-        />
-        </div>;
     }
     else {
       userMenu = 
-        <div>
-        <Button color="contrast" onClick={()=>this.setState({viewDialogLogin: true})}>Login</Button>
-      <DialogLogin
-        open={this.state.viewDialogLogin}
-        onRequestClose={this.handleDialogLoginClose}
-        />
-        </div>
+        <Button color="contrast" onClick={this.props.onLogin}>Login</Button>
     }
     return userMenu;
   }
@@ -137,7 +107,7 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
           {
             (this.props.user.email  != null) &&
             <IconButton color='contrast' aria-label="Create a new Item"
-            onClick={()=>{console.log('Se debe ver ');this.setState({viewDialogItemCreate: true})}}
+            onClick={this.props.onItemCreate}
             >
               <AddBoxIcon/>
             </IconButton>
@@ -206,7 +176,6 @@ class UserMenu extends React.Component<_LoginProps,_LoginState>  {
       anchorEl: undefined
     }
     this.handleLogout.bind(this);
-
   }
   handleClick = (e) => {
     this.setState({ open: true, anchorEl: e.currentTarget});
@@ -215,10 +184,8 @@ class UserMenu extends React.Component<_LoginProps,_LoginState>  {
   handleRequestClose = (e) => {
     this.setState({ open: false });
   }
-
   handleLogout = () => {
-    console.log("Hola mundo")
-    this.props.onLogout("Extra")
+    this.props.onLogout();
   }
   
   render() {
@@ -246,4 +213,4 @@ class UserMenu extends React.Component<_LoginProps,_LoginState>  {
     )
   }
 }
-export default connect(mapStateToProps, mapDispatchesToProps) (withRouter(Header))
+export default withRouter(Header)
