@@ -5,7 +5,8 @@ import {
   BrowserRouter,
   Route, 
   Switch,
-  withRouter
+  withRouter,
+  Redirect
 } from 'react-router-dom';
 import firebase from './../common/firebase'
 
@@ -15,6 +16,7 @@ interface IOwnProps {
 };
 
 interface IConnProps {
+  user: any;
 };
 interface IConnDispatches {
   setupUser: () => void;
@@ -24,6 +26,7 @@ interface IOwnState {
 
 function mapStateToProps(state) {
   return {
+    user: state.user
   };
 };
 function mapDispatchesToProps(dispatch) {
@@ -45,10 +48,18 @@ class App extends React.Component<IOwnProps & IConnProps & IConnDispatches, IOwn
       }
     });
   }
+  checkAuth (e) {
+    console.log("Checking on Enter")
+    console.log(e)
+    return true;
+  }
   render() {
     return (
       <BrowserRouter>
-      <Route path='/' component={SnackBar}/>
+        <Switch>
+          <Route path='/' render={ () => (this.props.user.email != null)? <SnackBar />  : (<p>Logueate papu</p>) }/>
+          <Route path='/home' component={SnackBar} />
+        </Switch>
       </BrowserRouter>
     );
   }
