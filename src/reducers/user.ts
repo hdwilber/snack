@@ -52,18 +52,8 @@ export const userReducer = handleActions<IUserState, any>({
       ...state,
     };
   },
-  [USER_LOGOUT_SUCCESS]: (state: IUserState, action: Action<USER_LOGOUT_SUCCESS>): IUserState => {
-    return {
-      ...state,
-      id: null,
-      email: null,
-      displayName: null,
-      photoUrl: null,
-      provider: null,
-      error: null,
-      logout: false
-
-    }
+  [USER_LOGOUT_SUCCESS]: (state: IUserState, action: Action<USER_LOGOUT>): IUserState => {
+    return null;
   },
   [USER_LOGOUT_FAILED]: (state: IUserState, action: Action<USER_LOGOUT_FAILED>): IUserState => {
     return {

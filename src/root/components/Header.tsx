@@ -74,7 +74,7 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
 
   renderUserMenu() {
     var userMenu; 
-    if (this.props.user.email != null) {
+    if (this.props.user != null) {
       userMenu = 
         <UserMenu user={this.props.user} onLogout={this.handleLogout}/>
     }
@@ -99,7 +99,7 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
             </Link>
           </Typography>
           {
-            (this.props.user.email  != null) &&
+            (this.props.user != null) &&
             <IconButton color='contrast' aria-label="Create a new Item"
             onClick={this.props.onItemCreate}
             >

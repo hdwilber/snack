@@ -27,13 +27,19 @@ export interface ICItemState {
   images: Array<string>
   inProcess: boolean; // True when is executing the status: creation, saving, uploading,etc
   status: string; // create, save, upload
-  uploadStatus: { // When uploading files
-    files: File,
-    current: number;
-    progress: number;
+  uploading: { // When uploading files
+    data: Array<IUploadState>,
+    current: IUploadState;
     status: string;
   }
   error: ICItemErrorState;
+}
+export interface IUploadState {
+  file: File,
+  status: string;
+  progress: number;
+  path: string;
+  self: any;
 }
 export interface ICItemErrorState {
   code: number;
@@ -49,7 +55,7 @@ export const CITEM_DEFAULT = {
   images: [],
   inProcess: false,
   status: 'empty',
-  uploadStatus: null,
+  uploading: null,
 };
 export const CITEM_ERROR_DEFAULT: ICItemErrorState = {
   code: 0,
