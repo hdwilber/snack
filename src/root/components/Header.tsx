@@ -27,11 +27,6 @@ import RecordVoiceOver from 'material-ui-icons/RecordVoiceOver'
 import AddBoxIcon from 'material-ui-icons/AddBox'
 import SettingsIcon from 'material-ui-icons/Settings'
 
-import DialogLogin from './partials/DialogLogin'
-import {
-  userLogin,
-  userLogout 
-} from './../../actions/user';
 interface IOwnProps {
   user: any;
   onItemCreate: ()=>void;
@@ -40,7 +35,6 @@ interface IOwnProps {
 }
 interface IOwnState {
   viewSideMenu: boolean;
-  viewDialogLogin: boolean;
 }
 interface IConnProps{
 }
@@ -61,7 +55,7 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
     super(props);
 
     console.log(props);
-    this.state = { viewSideMenu: false, viewDialogLogin: false };
+    this.state = { viewSideMenu: false };
   }
   handleSideMenu(e) {
     this.setState ({

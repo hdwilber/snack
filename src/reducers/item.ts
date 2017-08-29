@@ -12,8 +12,46 @@ import {
   ITEM_CREATE_SUCCESS,
   ITEM_CREATE_FAILED,
   ITEM_SAVE,
+
+  ITEM_REMOVE,
+  ITEM_REMOVE_SUCCESS,
+  ITEM_REMOVE_FAILED,
+
+  ICItemState,
+  CITEM_CREATE,
+  CITEM_CREATE_SUCCESS,
+  CITEM_CREATE_FAILED,
+  CITEM_SAVE,
+  CITEM_SAVE_FAILED,
+  CITEM_SAVE_SUCCESS,
+  CITEM_REMOVE,
+  CITEM_REMOVE_SUCCESS,
+  CITEM_REMOVE_FAILED,
+  CITEM_DEFAULT
+
+
 } from '../states'
 
+export const currentItemReducer = handleActions<ICItemState, any>({
+  [CITEM_CREATE]: (state: ICItemState, action: Action<CITEM_CREATE>) : ICItemState => {
+    return null;
+  },
+  [CITEM_CREATE_SUCCESS]: (state: ICItemState, action: Action<CITEM_CREATE>): ICItemState => {
+    return {
+      ...state,
+      id: action.payload.id
+    }
+  },
+  [CITEM_CREATE_FAILED]: (state: ICItemState, action: Action<CITEM_CREATE>): ICItemState => {
+    return {
+      ...state,
+      error: {
+        code: action.payload.code,
+        message: action.payload.message
+      }
+    }
+  },
+}, null)
 
 export const itemSaveReducer = handleActions<IItemSaveState, any>( {
   [ITEM_SAVE]: (state: IItemSaveState, action: Action<ITEM_SAVE>): IItemSaveState => {
@@ -40,6 +78,11 @@ export const itemSaveReducer = handleActions<IItemSaveState, any>( {
       }
     }
   },
+  [ITEM_REMOVE]: (state: IItemSaveState, action: Action<ITEM_REMOVE>): IItemSaveState => {
+    return {
+      ...state,
+    }
+  }
 }, ITEM_SAVE_DEFAULT_STATE);
 
 export const itemCreateReducer = handleActions<IItemCreateState, any>({

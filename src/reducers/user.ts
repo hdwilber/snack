@@ -87,5 +87,5 @@ export const userReducer = handleActions<IUserState, any>({
       provider: action.payload.user.providerId
     }
   }
-}, USER_DEFAULT_STATE);
+}, null);
 
