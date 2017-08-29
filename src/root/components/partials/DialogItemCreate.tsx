@@ -22,7 +22,7 @@ import IconButton from 'material-ui/IconButton'
 import {FormGroup, FormLabel, FormControlLabel} from 'material-ui/Form'
 import Checkbox from 'material-ui/Checkbox'
 
-import {fileUpload} from './../../../actions/file-upload'
+import {fileUpload} from './../../../actions/file'
 //import {itemCreate, itemSave} from './../../../actions/item'
 
 import Typography from 'material-ui/Typography' 
@@ -202,9 +202,9 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
 
         </FormGroup>
 
-        <GridList cellHeight={160} cols={1}>
+        <GridList cellHeight={160} cols={2}>
         {this.state.images.map((val, i) => 
-           <GridListTile key={i} col={1}>
+           <GridListTile key={i} cols={2}>
            <img src={val} />
             <GridListTileBar
               title={i}
