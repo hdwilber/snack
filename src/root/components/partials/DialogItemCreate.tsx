@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom'
 
 import Button from 'material-ui/Button';
-import FormGroup from 'material-ui/Form'
 import Avatar from 'material-ui/Avatar';
 import List, { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
 import Dialog, { DialogContent, DialogTitle, DialogActions } from 'material-ui/Dialog';
@@ -20,13 +19,16 @@ import AddIcon from 'material-ui-icons/Add'
 import RemoveIcon from 'material-ui-icons/Remove';
 import GridList, {GridListTile, GridListTileBar}from 'material-ui/GridList'
 import IconButton from 'material-ui/IconButton'
-import {FormLabel, FormControlLabel} from 'material-ui/Form'
+import {FormGroup, FormLabel, FormControlLabel} from 'material-ui/Form'
+import Checkbox from 'material-ui/Checkbox'
 
-//import {fileUpload} from './../../../actions/file-upload'
+import {fileUpload} from './../../../actions/file-upload'
 //import {itemCreate, itemSave} from './../../../actions/item'
 
 import Typography from 'material-ui/Typography' 
 import MenuIcon from 'material-ui-icons/Menu'
+import {Textarea} from 'material-ui/Input'
+
 
 
 interface IOwnProps {
@@ -43,7 +45,7 @@ interface IConnProps {
   baseId: string;
 };
 interface IConnDispatches {
-  test: () => void;
+  uploadFile: (string, FileList) => void;
 };
 interface IOwnState {
   id: string;
@@ -59,19 +61,20 @@ function mapStateToProps(state) {
   return {
     isLoading: true,
     imagePath: '',
-    uploadedFile: null,
-    fileUrl: '',
-    baseId: '/',
+    uploadedFile: state.fileUpload,
+    fileUrl: state.fileUpload.url,
   };
 };
 function mapDispatchesToProps(dispatch) {
   return {
-    test : () => console.log('PUTAMADRE')
+    uploadFile: (id: string, files: FileList) => dispatch( 
+     fileUpload(id, files)),
   }
 };
 
 class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & IConnProps, IOwnState> {
   fileInput: any;
+  descInput: any;
   constructor(props) {
     super(props)
     this.state = ({
@@ -95,6 +98,14 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
     this.props.onRequestClose('save')
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.fileUrl) {
+      let myimg = this.state.images.concat([nextProps.fileUrl])
+      this.setState({
+        images: myimg
+      })
+    }
+  }
   onChangeHandler = (e) => {
     var aux = e.target.value;
     switch(e.target.name) {
@@ -104,10 +115,15 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
       case 'name': 
         this.setState({name: aux})
       break;
+      case 'description': 
+        this.setState({description:  aux})
+      break;
     }
   }
 
   onChangeFIHandler = (e) => {
+    console.log("Cambiaron los archivos");
+    this.props.uploadFile(this.props.baseId, e.target.files)
   }
 
   appendFile = (e)=> {
@@ -143,23 +159,48 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
             type="text"
             fullWidth
            />
-          <FormLabel> 
-            Quantity: 
-          </FormLabel>
-          <input style={{flexGrow: 1}} name="quantity" type="range" min="1" max="50" step="1" onChange={this.onChangeHandler} />
-          <FormLabel>
-          {this.state.quantity}
-          </FormLabel>
+           <textarea style={{width: '100%'}}name="description" onChange={this.onChangeHandler} value={this.state.description}/>
+
+           <FormGroup row>
+           <FormGroup>
+            <FormLabel> 
+              Quantity: 
+            </FormLabel>
+            <input style={{flexGrow: 1}} name="quantity" type="range" min="1" max="50" step="1" onChange={this.onChangeHandler} />
+            <FormLabel>
+            {this.state.quantity}
+            </FormLabel>
+           </FormGroup>
+           <FormGroup>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.autoservice}
+                  onChange={() => {this.setState({autoservice: !this.state.autoservice})}}
+                  value="autoservice"
+                />
+              }
+              label="Autoservice?" 
+            />
+            </FormGroup>
+          </FormGroup>
 
         <input style={{ opacity: 0 }} id="file" type="file" onChange={this.onChangeFIHandler} ref={(input) => {this.fileInput = input;}}
         />
-          <FormLabel> 
+
+
+        <FormGroup row={true} style={{justifyContent: 'space-between'}}>
+          <FormLabel >
           Photos:
           </FormLabel>
-        <Button style={{float: 'right'}} fab color="primary" aria-label="add"
-        onClick={this.appendFile}>
-          <AddIcon />
-        </Button>
+
+          <Button fab color="primary" aria-label="add"
+          onClick={this.appendFile}>
+            <AddIcon />
+          </Button>
+
+        </FormGroup>
 
         <GridList cellHeight={160} cols={1}>
         {this.state.images.map((val, i) => 
