@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux';
-import { handleActions, Action } from 'redux-actions';
-import { IAppState } from '../state';
 
-import { PAGE_LOAD } from '../actions/app';
+import {appReducer} from './app';
+import {userReducer} from './user';
+import {fileUploadReducer} from './file';
+import {currentItemReducer, itemCreateReducer, itemSaveReducer} from './item'
 
-const DEFAULT_STATE: IAppState = {
-};
-
-const app = handleActions<IAppState, any>({
-  [PAGE_LOAD]: (state: IAppState, action: Action<PAGE_LOAD>): IAppState => state
-}, DEFAULT_STATE);
-
-export default combineReducers<IAppState>({
-  app,
+export default combineReducers<any>({
+  app: appReducer,
+  user: userReducer,
+  fileUpload: fileUploadReducer,
+  itemCreate: itemCreateReducer,
+  itemSave: itemSaveReducer,
+  currentItem: currentItemReducer
 });
+

@@ -1,17 +1,17 @@
 import { Action } from 'redux-actions';
-import { IAppState } from '../state';
+import firebase from '../common/firebase'
+import {
+  IAppState,
+  PAGE_LOAD
+} from '../states'
 
-export const PAGE_LOAD = 'App/PAGE_LOAD';
-export type PAGE_LOAD = {
-  isLoading: boolean
-};
-
-export function showLoadable(isLoading: boolean) {
+export function showLoadable(page: string, loading: boolean) {
   return (dispatch, getState: () => IAppState) => {
     dispatch({
       type: PAGE_LOAD,
       payload: {
-        isLoading
+        page: page,
+        isLoading: loading
       }
     } as Action<PAGE_LOAD>);
   };
