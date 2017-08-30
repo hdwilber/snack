@@ -10,7 +10,7 @@
     "prod:build": "webpack -p --config webpack.prod.config.js --display-error-details",
     "lint": "tslint --type-check --project tsconfig.json --force {src,examples}/**/*.{ts,tsx}"
   },
-  "author": "",
+  "author": "Nearshore Code",
   "license": "ISC",
   "dependencies": {
     "awesome-typescript-loader": "^3.2.3",
