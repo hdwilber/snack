@@ -181,35 +181,33 @@ export function citemUpload(files ) {
           status: 'started',
           progress: 0,
           path: 'images/'+_currentItem.id,
-          self: imgRef.put(files[i])
+          url: null,
         };
+        var upSelf = imgRef.put(files[i]);
 
-        //let imgRef = images.child(Date.now()+ files[i].name);
-        //upRefs.push(imgRef.put(files[i]));
-
-        upload.self.on('state_changed', (snap)=> {
-          this.progress = (snap.bytesTransferred / snap.totalBytes) * 100;
+        upSelf.on('state_changed', (snap: any)=> {
+          upload.progress = (snap.bytesTransferred / snap.totalBytes) * 100;
 
           switch(snap.state) {
             case firebase.storage.TaskState.PAUSED: // or 'paused'
-              this.status = 'pause';
-              console.log('Upload ' +this.path+'is paused');
+              upload.status = 'pause';
+              console.log('Upload ' +upload.path+'is paused');
               break;
             case firebase.storage.TaskState.RUNNING: // or 'running'
-              this.status = 'running'
-              console.log('Upload ' +this.path+'is running');
+              upload.status = 'running'
+              console.log('Upload ' +upload.path+'is running');
               break;
           }
           
         });
-        upload.self.then(snap => {
+        upRefs.push(upload);
+
+        upSelf.then(snap => {
+          upload.url = snap.metadata.downloadURLs[0],
           dispatch({
             type: CITEM_UPLOAD_SUCCESS,
             payload: {
-              name: snap.metadata.name,
-              path: snap.metadata.fullPath,
-              url: snap.metadata.downloadURLs[0],
-              target:  _currentItem
+              singleUpload: upload
             } as Action<CITEM_UPLOAD_SUCCESS>
           })
         }).catch(error => {
@@ -222,6 +220,13 @@ export function citemUpload(files ) {
           })
         });
       }
+      dispatch( {
+        type: CITEM_UPLOAD,
+        payload: {
+          data: upRefs,
+          current: upRefs[0]
+        }
+      })
     } else {
       dispatch({
         type: CITEM_UPLOAD_FAILED,

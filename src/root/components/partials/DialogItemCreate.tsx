@@ -29,20 +29,12 @@ import Typography from 'material-ui/Typography'
 import MenuIcon from 'material-ui-icons/Menu'
 import {Textarea} from 'material-ui/Input'
 
-
-import {citemCreate, citemSave} from './../../../actions/item'
-
-
 interface IOwnProps {
   onRequestClose: (string, any) => void;
+  onFilesUpload: (files: FileList) => void;
   open: boolean;
   user: any;
   item: any;
-};
-
-interface IConnProps {
-};
-interface IConnDispatches {
 };
 interface IOwnState {
   id: string;
@@ -54,7 +46,7 @@ interface IOwnState {
   images: Array<string>;
 };
 
-class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & IConnProps, IOwnState> {
+class DialogItemCreate extends React.Component<IOwnProps, IOwnState> {
   fileInput: any;
   descInput: any;
   constructor(props) {
@@ -89,6 +81,7 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
   componentWillReceiveProps(nextProps) {
   }
 
+  
     //}
     //if (nextProps)
     //if (nextProps.fileUrl) {
@@ -115,7 +108,7 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
 
   onChangeFIHandler = (e) => {
     console.log("Cambiaron los archivos");
-    //this.props.uploadFile(this.props.baseId, e.target.files)
+    this.props.onFilesUpload(e.target.files)
   }
 
   appendFile = (e)=> {
@@ -128,6 +121,42 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
   }
   handleRequestClose = () => {
     return false;
+  }
+
+  renderImageGrid () {
+    if (this.props.item != null) {
+      if (this.props.item.uploading != null) {
+        return (
+        <GridList cellHeight={160} cols={2}>
+        {this.props.item.uploading.data.map((val, i) => {
+          console.log('INSIDE ')
+          console.log(val);
+          console.log(i)
+          console.log('INSIDE ')
+
+          return (
+           <GridListTile key={i} cols={2}>
+             <img src={val.url} />
+             <GridListTileBar
+               title={i}
+               titlePosition="bottom"
+               actionIcon={
+                 <IconButton>
+                   <RemoveIcon color="white" />
+                 </IconButton>
+               }
+               actionPosition="right"
+             />
+
+           </GridListTile>
+          )
+        }
+          )}
+        </GridList>
+        );
+
+      }
+    }
   }
 
   render() {
@@ -194,26 +223,7 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
 
         </FormGroup>
 
-        <GridList cellHeight={160} cols={2}>
-        {this.state.images.map((val, i) => 
-           <GridListTile key={i} cols={2}>
-           <img src={val} />
-            <GridListTileBar
-              title={i}
-              titlePosition="bottom"
-              actionIcon={
-                <IconButton>
-                  <RemoveIcon color="white" />
-                </IconButton>
-              }
-              actionPosition="right"
-            />
-
-           </GridListTile>
-
-          )}
-
-        </GridList>
+        {this.renderImageGrid()}
 
         </DialogContent>
 

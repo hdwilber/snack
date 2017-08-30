@@ -14,7 +14,7 @@ import {userLogin, userLogout} from '../../actions/user'
 
 import DialogItemCreate from './partials/DialogItemCreate';
 import DialogLogin from './partials/DialogLogin';
-import {citemCreate, citemSave, citemRemove} from '../../actions/item';
+import {citemCreate, citemSave, citemRemove, citemUpload} from '../../actions/item';
 
 
 interface IOwnProps {
@@ -29,6 +29,7 @@ interface IConnDispatches {
   createItem: () =>void;
   saveItem: (any) => void;
   removeItem: () => void;
+  uploadFilesToItem: (FileList) => void;
 };
 interface IOwnState {
   viewDialogItemCreate: boolean;
@@ -51,7 +52,8 @@ function mapDispatchesToProps(dispatch) {
       ),
     createItem: () => dispatch(citemCreate()),
     saveItem: (data) => dispatch(citemSave(data)),
-    removeItem: () => dispatch(citemRemove())
+    removeItem: () => dispatch(citemRemove()),
+    uploadFilesToItem: (d: FileList) => dispatch(citemUpload(d))
   }
 };
 
@@ -65,7 +67,6 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
   }
 
   componentWillReceiveProps(nextprops) {
-    console.log("Next Props la puta mdader")
     console.log(nextprops);
   }
   handleDialogItemCreateClose = (value, data) => {
@@ -77,6 +78,9 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
       console.log('discard')
       this.props.removeItem();
     }
+  }
+  handleDialogItemCreateUpload = (files: FileList) => {
+    this.props.uploadFilesToItem(files);
   }
   handleDialogLoginClose = value => {
     this.setState({viewDialogLogin: false});
@@ -112,6 +116,7 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
           <DialogItemCreate 
             open={this.state.viewDialogItemCreate}
             onRequestClose={this.handleDialogItemCreateClose}
+            onFilesUpload={this.handleDialogItemCreateUpload}
             user={this.props.user}
             item={this.props.item}
 

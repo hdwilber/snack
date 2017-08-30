@@ -27,9 +27,10 @@ import {
   CITEM_REMOVE,
   CITEM_REMOVE_SUCCESS,
   CITEM_REMOVE_FAILED,
-  CITEM_DEFAULT
-
-
+  CITEM_DEFAULT,
+  CITEM_UPLOAD,
+  CITEM_UPLOAD_SUCCESS,
+  CITEM_UPLOAD_FAILED
 } from '../states'
 
 export const currentItemReducer = handleActions<ICItemState, any>({
@@ -104,6 +105,45 @@ export const currentItemReducer = handleActions<ICItemState, any>({
       ...state,
       error: {
         code: action.payload.code,
+        message: action.payload.message
+      }
+    }
+  },
+  [CITEM_UPLOAD]: (state: ICItemState, action: Action<CITEM_UPLOAD>): ICItemState => {
+    var newdata =null;
+    if (state.uploading != null) {
+      //newdata = state.uploading.data.slice(0);
+      newdata = state.uploading.data.concat(action.payload.data)
+    } else {
+      newdata = action.payload.data
+    }
+    return {
+      ...state,
+      uploading: {
+        data: newdata,
+        current: action.payload.current,
+        status: 'init'
+      }
+    }
+  },
+  [CITEM_UPLOAD_SUCCESS]: (state: ICItemState, action: Action<CITEM_UPLOAD_SUCCESS>): ICItemState => {
+    return {
+      ...state,
+      uploading: {
+        ...state.uploading,
+        current: action.payload.singleUpload,
+        status: 'finished'
+      }
+    }
+  },
+  [CITEM_UPLOAD_FAILED]: (state: ICItemState, action: Action<CITEM_UPLOAD_FAILED>): ICItemState => {
+    return {
+      ...state,
+      uploading: {
+        status: 'failed'
+      },
+      error: {
+        code: action.payload.code, 
         message: action.payload.message
       }
     }

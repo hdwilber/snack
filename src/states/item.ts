@@ -29,8 +29,8 @@ export interface ICItemState {
   inProcess: boolean; // True when is executing the status: creation, saving, uploading,etc
   status: string; // create, save, upload
   uploading: { // When uploading files
-    data: Array<IUploadState>,
-    current: IUploadState;
+    data?: Array<IUploadState>,
+    current?: IUploadState;
     status: string;
   }
   error: ICItemErrorState;
@@ -41,7 +41,7 @@ export interface IUploadState {
   status: string;
   progress: number;
   path: string;
-  self: any;
+  url: string;
 }
 export interface ICItemErrorState {
   code: number;
@@ -109,13 +109,11 @@ export const CITEM_UPLOAD = 'CItem/UPLOAD';
 export const CITEM_UPLOAD_SUCCESS = 'CItem/UPLOAD_SUCCESS';
 export const CITEM_UPLOAD_FAILED = 'CItem/UPLOAD_FAILED';
 export type CITEM_UPLOAD = {
+  data: Array<IUploadState>,
+  current: IUploadState,
 }
 export type CITEM_UPLOAD_SUCCESS = {
-  name: null,
-  path: null,
-  uid: null,
-  url: null,
-  target: null,
+  singleUpload: IUploadState;
 }
 export type CITEM_UPLOAD_FAILED = {
   code: number;
