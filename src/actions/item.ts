@@ -129,7 +129,7 @@ export function citemSave(data) {
 export function citemRemove() {
   return (dispatch, getState: () => any) => {
     var state = getState();
-    dispatch({type: 'CITEM_REMOVE', payload: {
+    dispatch({type: CITEM_REMOVE, payload: {
       id: state.currentItem.id
     }}as Action<CITEM_REMOVE>)
 
@@ -138,11 +138,11 @@ export function citemRemove() {
 
       let theref = itemsRef.child(state.currentItem.id)
       theref.remove().then( () =>{
-        dispatch( { type: 'CITEM_REMOVE_SUCCESS', payload: {
+        dispatch( { type: CITEM_REMOVE_SUCCESS, payload: {
           id: state.currentItem.id
         }} as Action<CITEM_REMOVE>)
       }).catch(error =>{
-        dispatch({type: 'ITEM_REMOVE_FAILED', payload: {
+        dispatch({type: CITEM_REMOVE_FAILED, payload: {
           error: {
             code: -1,
             message: error.message
@@ -151,7 +151,7 @@ export function citemRemove() {
       });
 
     } else {
-      dispatch({type: 'ITEM_REMOVE_FAILED', payload: {
+      dispatch({type: CITEM_REMOVE_FAILED, payload: {
         error: {
           code: -1,
           message: 'Item not exists or user not logged'
