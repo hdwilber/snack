@@ -75,7 +75,6 @@ class DialogItemCreate extends React.Component<IOwnProps, IOwnState> {
       quantity: this.state.quantity,
       autoservice: this.state.autoservice,
       timeToWait: this.state.timeToWait,
-      images: this.state.images
     });
   }
   componentWillReceiveProps(nextProps) {

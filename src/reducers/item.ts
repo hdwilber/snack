@@ -129,6 +129,7 @@ export const currentItemReducer = handleActions<ICItemState, any>({
   [CITEM_UPLOAD_SUCCESS]: (state: ICItemState, action: Action<CITEM_UPLOAD_SUCCESS>): ICItemState => {
     return {
       ...state,
+      images: state.images.concat([action.payload.singleUpload.url]),
       uploading: {
         ...state.uploading,
         current: action.payload.singleUpload,

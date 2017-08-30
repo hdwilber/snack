@@ -11,6 +11,7 @@ import {
 import firebase from './../common/firebase'
 
 import {setupUser} from './../actions/user'
+import ItemList from './components/item-list/ItemList'
 
 interface IOwnProps {
 };
@@ -55,11 +56,12 @@ class App extends React.Component<IOwnProps & IConnProps & IConnDispatches, IOwn
   }
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/' component={SnackBar}/>
-        </Switch>
-      </BrowserRouter>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={SnackBar} />
+            <Route exact path="/list" render={()=> (<SnackBar> <ItemList /> </SnackBar>) } />
+          </Switch>
+        </BrowserRouter>
     );
   }
 }

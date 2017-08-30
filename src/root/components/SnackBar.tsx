@@ -15,9 +15,11 @@ import {userLogin, userLogout} from '../../actions/user'
 import DialogItemCreate from './partials/DialogItemCreate';
 import DialogLogin from './partials/DialogLogin';
 import {citemCreate, citemSave, citemRemove, citemUpload} from '../../actions/item';
+import ItemList from './item-list/ItemList'
 
 
 interface IOwnProps {
+  children: any;
 };
 interface IConnProps {
   user: any;
@@ -64,6 +66,8 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
       viewDialogItemCreate: false,
       viewDialogLogin: false 
     };
+    console.log("Constructor de snackBar")
+    console.log(props);
   }
 
   componentWillReceiveProps(nextprops) {
@@ -126,6 +130,9 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
           open={this.state.viewDialogLogin}
           onRequestClose={this.handleDialogLoginClose}
           />
+
+
+        {this.props.children}
         </Paper>
       </div>
     );

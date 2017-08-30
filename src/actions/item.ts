@@ -96,7 +96,7 @@ export function citemSave(data) {
         quantity: data.quantity,
         autoservice: data.autoservice, 
         description: data.description,
-        images: ((data.images != null) ? data.images : [])
+        images: ((state.currentItem.images != null) ? state.currentItem.images : [])
       })
       .then(() => {
         dispatch({type: CITEM_SAVE_SUCCESS, 
@@ -106,7 +106,7 @@ export function citemSave(data) {
             timeToWait: data.timeToWait,
             quantity: data.quantity,
             autoservice: data.autoservice, 
-            images: data.images
+            images: ((state.currentItem.images != null) ? state.currentItem.images : [])
         }} as Action<CITEM_SAVE>)
       }).catch(error => {
         dispatch({type: CITEM_SAVE_FAILED,

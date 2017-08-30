@@ -55,7 +55,7 @@ export const CITEM_DEFAULT = {
   timeToWait: null,
   description: null,
   autoservice: true,
-  images: null,
+  images: [],
   inProcess: false,
   status: 'empty',
   uploading: null,
