@@ -23,6 +23,7 @@ export interface ICItemState {
   name: string;
   quantity: number;
   description: string;
+  autoservice: boolean;
   timeToWait: number;
   images: Array<string>
   inProcess: boolean; // True when is executing the status: creation, saving, uploading,etc
@@ -35,7 +36,8 @@ export interface ICItemState {
   error: ICItemErrorState;
 }
 export interface IUploadState {
-  file: File,
+  file: any,
+  name: string;
   status: string;
   progress: number;
   path: string;
@@ -52,10 +54,13 @@ export const CITEM_DEFAULT = {
   quantity:null, 
   timeToWait: null,
   description: null,
-  images: [],
+  autoservice: true,
+  images: null,
   inProcess: false,
   status: 'empty',
   uploading: null,
+  error: null
+
 };
 export const CITEM_ERROR_DEFAULT: ICItemErrorState = {
   code: 0,
@@ -74,7 +79,7 @@ export type CITEM_CREATE_FAILED = {
 }
 
 export const CITEM_SAVE = 'CItem/SAVE'
-export const CITEM_SAVE_SUCCESS = 'CItem/SAVE_SUCCES'
+export const CITEM_SAVE_SUCCESS = 'CItem/SAVE_SUCCESS'
 export const CITEM_SAVE_FAILED = 'CItem/SAVE_FAILED'
 export type CITEM_SAVE = {
   id: string;
@@ -104,6 +109,8 @@ export const CITEM_UPLOAD = 'CItem/UPLOAD';
 export const CITEM_UPLOAD_SUCCESS = 'CItem/UPLOAD_SUCCESS';
 export const CITEM_UPLOAD_FAILED = 'CItem/UPLOAD_FAILED';
 export type CITEM_UPLOAD = {
+}
+export type CITEM_UPLOAD_SUCCESS = {
   name: null,
   path: null,
   uid: null,

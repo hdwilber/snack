@@ -34,12 +34,17 @@ import {
 
 export const currentItemReducer = handleActions<ICItemState, any>({
   [CITEM_CREATE]: (state: ICItemState, action: Action<CITEM_CREATE>) : ICItemState => {
-    return null;
+    return {
+      ...CITEM_DEFAULT,
+      inProcess: true,
+      status: 'create'
+    }
   },
   [CITEM_CREATE_SUCCESS]: (state: ICItemState, action: Action<CITEM_CREATE>): ICItemState => {
     return {
       ...state,
-      id: action.payload.id
+      id: action.payload.id,
+      inProcess: false,
     }
   },
   [CITEM_CREATE_FAILED]: (state: ICItemState, action: Action<CITEM_CREATE>): ICItemState => {
@@ -51,7 +56,60 @@ export const currentItemReducer = handleActions<ICItemState, any>({
       }
     }
   },
-}, null)
+  [CITEM_SAVE]: (state: ICItemState, action: Action<CITEM_SAVE>): ICItemState => {
+    return {
+      ...state,
+      inProcess: true,
+      status: 'save'
+    }
+  },
+  [CITEM_SAVE_SUCCESS]: (state: ICItemState, action: Action<CITEM_SAVE>): ICItemState => {
+    return {
+      ...state, 
+      name: action.payload.name,
+      quantity: action.payload.quantity,
+      description: action.payload.description,
+      autoservice: action.payload.autoservice,
+      timeToWait: action.payload.timeToWait,
+      images: action.payload.images,
+      inProcess: false,
+    }
+  },
+  [CITEM_SAVE_FAILED]: (state: ICItemState, action: Action<CITEM_SAVE_FAILED>): ICItemState=> {
+    return {
+      ...state,
+      inProcess: false, 
+      error: {
+        code: action.payload.code,
+        message: action.payload.message
+      }
+    }
+  },
+  [CITEM_REMOVE]: (state: ICItemState, action: Action<CITEM_REMOVE>): ICItemState=> {
+    return {
+      ...state,
+      inProcess: true, 
+      status: 'remove',
+    }
+  },
+  [CITEM_REMOVE_SUCCESS]: (state: ICItemState, action: Action<CITEM_REMOVE>): ICItemState=> {
+    return {
+      ...CITEM_DEFAULT,
+      inProcess: false, 
+      status: 'remove',
+    }
+  },
+  [CITEM_REMOVE_FAILED]: (state: ICItemState, action: Action<CITEM_REMOVE_FAILED>): ICItemState=> {
+    return {
+      ...state,
+      error: {
+        code: action.payload.code,
+        message: action.payload.message
+      }
+    }
+  },
+
+}, null);
 
 export const itemSaveReducer = handleActions<IItemSaveState, any>( {
   [ITEM_SAVE]: (state: IItemSaveState, action: Action<ITEM_SAVE>): IItemSaveState => {

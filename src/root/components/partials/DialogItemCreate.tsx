@@ -30,22 +30,19 @@ import MenuIcon from 'material-ui-icons/Menu'
 import {Textarea} from 'material-ui/Input'
 
 
+import {citemCreate, citemSave} from './../../../actions/item'
+
 
 interface IOwnProps {
-  onRequestClose: (string) => void;
-  selectedValue: any;
+  onRequestClose: (string, any) => void;
   open: boolean;
+  user: any;
+  item: any;
 };
 
 interface IConnProps {
-  isLoading: boolean;
-  imagePath: string;
-  uploadedFile: any;
-  fileUrl: string;
-  baseId: string;
 };
 interface IConnDispatches {
-  uploadFile: (string, FileList) => void;
 };
 interface IOwnState {
   id: string;
@@ -55,21 +52,6 @@ interface IOwnState {
   autoservice: boolean;
   timeToWait: number;
   images: Array<string>;
-};
-
-function mapStateToProps(state) {
-  return {
-    isLoading: true,
-    imagePath: '',
-    uploadedFile: state.fileUpload,
-    fileUrl: state.fileUpload.url,
-  };
-};
-function mapDispatchesToProps(dispatch) {
-  return {
-    uploadFile: (id: string, files: FileList) => dispatch( 
-     fileUpload(id, files)),
-  }
 };
 
 class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & IConnProps, IOwnState> {
@@ -90,22 +72,32 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
   handleRequestDiscard= (e) => {
     console.log("discard")
     console.log(e);
-    this.props.onRequestClose('discard')
-  };
+    this.props.onRequestClose('discard', null);
+  }
   handleRequestSave = (e) => {
     console.log("save")
     console.log(e);
-    this.props.onRequestClose('save')
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.fileUrl) {
-      let myimg = this.state.images.concat([nextProps.fileUrl])
-      this.setState({
-        images: myimg
-      })
-    }
+    this.props.onRequestClose('save', {
+      name: this.state.name,
+      description: this.state.description,
+      quantity: this.state.quantity,
+      autoservice: this.state.autoservice,
+      timeToWait: this.state.timeToWait,
+      images: this.state.images
+    });
   }
+  componentWillReceiveProps(nextProps) {
+  }
+
+    //}
+    //if (nextProps)
+    //if (nextProps.fileUrl) {
+      //let myimg = this.state.images.concat([nextProps.fileUrl])
+      //this.setState({
+        //images: myimg
+      //})
+    //}
+  //}
   onChangeHandler = (e) => {
     var aux = e.target.value;
     switch(e.target.name) {
@@ -123,7 +115,7 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
 
   onChangeFIHandler = (e) => {
     console.log("Cambiaron los archivos");
-    this.props.uploadFile(this.props.baseId, e.target.files)
+    //this.props.uploadFile(this.props.baseId, e.target.files)
   }
 
   appendFile = (e)=> {
@@ -237,4 +229,4 @@ class DialogItemCreate extends React.Component<IOwnProps & IConnDispatches & ICo
     );
   }
 }
-export default connect(mapStateToProps, mapDispatchesToProps)(DialogItemCreate);
+export default DialogItemCreate;

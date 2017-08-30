@@ -1,5 +1,5 @@
 import { Action } from 'redux-actions';
-import { IAppState} from '../states';
+import { IAppState } from '../states';
 import firebase from '../common/firebase'
 
 import {
@@ -23,6 +23,10 @@ import {
   CITEM_REMOVE_SUCCESS,
   CITEM_REMOVE_FAILED,
   CITEM_DEFAULT,
+
+  CITEM_UPLOAD,
+  CITEM_UPLOAD_SUCCESS,
+  CITEM_UPLOAD_FAILED,
   IUploadState
 } from '../states'
 
@@ -39,17 +43,19 @@ export function citemCreate() {
 
 
       var itemsRef = firebase.database().ref('items');
-      try {
-        let nid = itemsRef.push({
-          
-        }).key;
-        dispatch( {
+
+      var theRet = itemsRef.push({userId: state.user.id})
+      .then(el => {
+        console.log(el);
+        dispatch({
           type: CITEM_CREATE_SUCCESS,
           payload: {
-            id: nid
+            id: el.key
           }
         } as Action<CITEM_CREATE>)
-      } catch (error) {
+      })
+      .catch(error => {
+        console.log('Puto error');
         dispatch({
           type: CITEM_CREATE_FAILED,
           payload: {
@@ -57,7 +63,7 @@ export function citemCreate() {
             message: 'something went wrong'
           }
         } as Action<CITEM_CREATE_FAILED>)
-      }
+      });
     } else {
       dispatch({
         type: CITEM_CREATE_FAILED,
@@ -75,38 +81,40 @@ export function citemSave(data) {
     var state = getState();
 
     dispatch( {
-      type: CITEM_CREATE,
+      type: CITEM_SAVE,
       payload: {
-        id: null
       }
-    }as Action<CITEM_SAVE>);
-
+    } as Action<CITEM_SAVE>);
 
     if (state.user != null) {
-
       var itemsRef = firebase.database().ref('items');
       let theref= itemsRef.child(state.currentItem.id)
+      console.log(theref);
       theref.update({
         name: data.name,
         timeToWait: data.timeToWait,
         quantity: data.quantity,
         autoservice: data.autoservice, 
-        images: data.images
-      }).then(aux => {
-        dispatch( {type: CITEM_SAVE_SUCCESS, 
-        payload: {
-          name: aux.name,
-          timeToWait: aux.timeToWait,
-          quantity: aux.quantity,
-          autoservice: aux.autoservice, 
-          images: aux.images
+        description: data.description,
+        images: ((data.images != null) ? data.images : [])
+      })
+      .then(() => {
+        dispatch({type: CITEM_SAVE_SUCCESS, 
+          payload: {
+            name: data.name,
+            description: data.description,
+            timeToWait: data.timeToWait,
+            quantity: data.quantity,
+            autoservice: data.autoservice, 
+            images: data.images
         }} as Action<CITEM_SAVE>)
-      }).catch(err => {
+      }).catch(error => {
         dispatch({type: CITEM_SAVE_FAILED,
           payload: {
             code: -1,
-            message: 'Something webt wrong'
-         }} as Action<CITEM_SAVE_FAILED>)
+            message: error.message
+          }
+        } as Action<CITEM_SAVE_FAILED>)
       });
     } else {
       dispatch({type: CITEM_SAVE_FAILED,
@@ -121,22 +129,23 @@ export function citemSave(data) {
 export function citemRemove() {
   return (dispatch, getState: () => any) => {
     var state = getState();
+    dispatch({type: 'CITEM_REMOVE', payload: {
+      id: state.currentItem.id
+    }}as Action<CITEM_REMOVE>)
+
     if (state.currentItem != null && state.user != null) {
       var itemsRef = firebase.database().ref('items')
-      dispatch({type: 'CITEM_REMOVE', payload: {
-        id: state.currentItem.id
-      }}as Action<CITEM_REMOVE>)
 
       let theref = itemsRef.child(state.currentItem.id)
-      theref.remove().then(a=>{
+      theref.remove().then( () =>{
         dispatch( { type: 'CITEM_REMOVE_SUCCESS', payload: {
           id: state.currentItem.id
         }} as Action<CITEM_REMOVE>)
-      }).catch(e=>{
+      }).catch(error =>{
         dispatch({type: 'ITEM_REMOVE_FAILED', payload: {
           error: {
             code: -1,
-            message: e.message
+            message: error.message
           }
         }} as Action<CITEM_REMOVE_FAILED> )
       });
@@ -157,8 +166,9 @@ export function citemUpload(files ) {
   return (dispatch, getState: () => any) => {
     var state = getState();
     if (state.currentItem != null && state.user != null && state.uploading == null) {
+      var _currentItem = state.currentItem;
       var storageRef = firebase.storage().ref();
-      var images = storageRef.child('images/'+state.currentItem.id);
+      var images = storageRef.child('images/'+_currentItem.id);
 
       var upRefs = [];
 
@@ -167,9 +177,10 @@ export function citemUpload(files ) {
         let imgRef = images.child(Date.now()+ files[i].name);
         var upload: IUploadState  = {
           file: files[i],
+          name: files[i].name,
           status: 'started',
           progress: 0,
-          path: 'images/'+state.currentItem.id,
+          path: 'images/'+_currentItem.id,
           self: imgRef.put(files[i])
         };
 
@@ -193,18 +204,35 @@ export function citemUpload(files ) {
         });
         upload.self.then(snap => {
           dispatch({
-            type: FILE_UPLOAD_SUCCESS,
+            type: CITEM_UPLOAD_SUCCESS,
             payload: {
               name: snap.metadata.name,
               path: snap.metadata.fullPath,
               url: snap.metadata.downloadURLs[0],
-              target:  targetId
-            } as Action<FILE_UPLOAD_SUCCESS>
+              target:  _currentItem
+            } as Action<CITEM_UPLOAD_SUCCESS>
           })
-
+        }).catch(error => {
+          dispatch({
+            type: CITEM_UPLOAD_FAILED,
+            payload: {
+              code: 2,
+              message: error.message
+            } as Action<CITEM_UPLOAD_FAILED>
+          })
         });
-
-
+      }
+    } else {
+      dispatch({
+        type: CITEM_UPLOAD_FAILED,
+        payload: {
+          code: -1,
+          message: 'Somethig went wron: login, item'
+        } as Action<CITEM_UPLOAD_FAILED>
+      })
+    }
+  }
+}
 
         //.then (snap => {
           //console.log(snap);
@@ -226,11 +254,7 @@ export function citemUpload(files ) {
             //}
           //} as Action<FILE_UPLOAD_FAILED>);
         //});
-      };
-
-    }
-  }
-}
+        //};
 
 export function itemSave(data){ 
   return (dispatch, getState: ()=>any) => {
