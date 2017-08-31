@@ -88,7 +88,9 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
   }
   handleDialogLoginClose = value => {
     this.setState({viewDialogLogin: false});
-    this.props.userLogin(value);
+    if (value != null) {
+      this.props.userLogin(value);
+    } 
   }
 
   handleLogout = () => {

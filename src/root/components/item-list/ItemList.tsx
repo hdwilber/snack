@@ -7,7 +7,7 @@ import {
   withRouter,
 } from 'react-router-dom'
 
-import Grid from 'material-ui/Grid'
+import {Grid} from 'material-ui'
 import {userLogin, userLogout} from '../../../actions/user'
 
 import ItemCard from './partials/ItemCard'
@@ -68,8 +68,8 @@ class ItemList extends React.Component< IOwnProps & IConnDispatches & IConnProps
 
   render() {
     return (
-      <Grid container align="center" justify="center">
-      <Grid item sm={8} md={6}>
+      <Grid container align="center" justify="center" >
+      <Grid item >
       {this.renderItems()}
       </Grid>
       </Grid>

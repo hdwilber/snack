@@ -12,7 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography'
 import Toolbar from 'material-ui/Toolbar'
 import Button from 'material-ui/Button'
-import {List, Divider, ListItem, ListItemIcon, ListItemText, ListSubheader} from  'material-ui/List'
+import {List, Divider, ListItem, ListItemIcon, ListItemText, ListSubheader} from  'material-ui'
 import Avatar from 'material-ui/Avatar'
 import { withStyles } from 'material-ui/styles'
 import Drawer from 'material-ui/Drawer'
@@ -154,7 +154,7 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
 
 interface _LoginState {
   open: boolean;
-  anchorEl: React.Component;
+  anchorEl: any;
 }
 interface _LoginProps {
   user: any;

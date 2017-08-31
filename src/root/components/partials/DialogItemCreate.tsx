@@ -27,7 +27,6 @@ import {fileUpload} from './../../../actions/file'
 
 import Typography from 'material-ui/Typography' 
 import MenuIcon from 'material-ui-icons/Menu'
-import {Textarea} from 'material-ui/Input'
 
 interface IOwnProps {
   onRequestClose: (string, any) => void;

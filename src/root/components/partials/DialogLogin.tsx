@@ -18,42 +18,22 @@ import AddIcon from 'material-ui-icons/Add';
 import blue from 'material-ui/colors/blue';
 
 
-const styles = {
-  avatar: {
-    background: blue[100],
-    color: blue[600],
-  },
-};
 interface IOwnProps {
-  classes: any;
   onRequestClose: (string) => void;
+  open: boolean;
+};
+interface IOwnState {
   selectedValue: any;
 };
 
-interface IConnProps {
-
-};
-interface IConnDispatches {
-};
-interface IOwnState {
-};
-
-function mapStateToProps(state) {
-  return {
-  };
-};
-function mapDispatchesToProps(dispatch) {
-  return {
-  }
-};
-
 const providers = ['google.com', 'facebook.com'];
-class DialogLogin extends React.Component<IOwnProps & IConnDispatches & IConnProps, IOwnState> {
+class DialogLogin extends React.Component<IOwnProps, IOwnState> {
   constructor(props) {
     super(props)
+    this.state = {selectedValue: 'google.com'};
   }
   handleRequestClose = () => {
-    this.props.onRequestClose(this.props.selectedValue);
+    this.props.onRequestClose(null);
   };
 
   handleListItemClick = value => {
@@ -61,7 +41,7 @@ class DialogLogin extends React.Component<IOwnProps & IConnDispatches & IConnPro
   };
 
   render() {
-    const { onRequestClose, selectedValue, ...other } = this.props;
+    const { onRequestClose, ...other } = this.props;
     return (
         <Dialog onRequestClose={this.handleRequestClose} {...other}>
         <DialogTitle>Log In</DialogTitle>
@@ -70,12 +50,12 @@ class DialogLogin extends React.Component<IOwnProps & IConnDispatches & IConnPro
             {providers.map(provider =>
               <ListItem button onClick={() => this.handleListItemClick(provider)} key={provider}>
                 <ListItemAvatar>
-                  <Avatar className={styles.avatar}>
+                  <Avatar >
                     <PersonIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={provider} />
-              </ListItem>,
+              </ListItem>
             )}
           </List>
         </div>
@@ -83,4 +63,4 @@ class DialogLogin extends React.Component<IOwnProps & IConnDispatches & IConnPro
     );
   }
 }
-export default connect(mapStateToProps, mapDispatchesToProps) (DialogLogin);
+export default DialogLogin;

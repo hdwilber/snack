@@ -1,42 +1,19 @@
 import * as React from 'react';
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
 import Avatar from 'material-ui/Avatar';
 
-import GridList, {GridListTile, GridListTileBar}from 'material-ui/GridList'
+import {GridList, GridListTile, GridListTileBar} from 'material-ui/GridList'
 import IconButton from 'material-ui/IconButton'
 
 import AddIcon from 'material-ui-icons/Add'
 
 interface IOwnProps {
   data: any;
-  classes: any;
-};
-interface IOwnState {
 };
 
-const styles = theme => ({
-  card: {
-    maxWidth: 400,
-  },
-  media: {
-    height: 194,
-    backgroundPosition: 'center',
-    backgroundSize: 'contain'
-  },
-  gallery: {
-    listStyle: 'none',
-    padding: 0,
-  }, 
-  galleryItem: {
-    display: 'inline-block',
-  },
-  galleryImage: {
-    width: '100%',
-    maxWidth: '100%'
-  }
-});
+interface IOwnState {
+};
 
 class ItemCard extends React.Component <IOwnProps, IOwnState> {
   constructor(props) {
@@ -74,7 +51,6 @@ class ItemCard extends React.Component <IOwnProps, IOwnState> {
 
   render() {
     console.log(this.props.data);
-    const classes = this.props.classes;
     return (
        <Card >
           <CardHeader
@@ -100,5 +76,5 @@ class ItemCard extends React.Component <IOwnProps, IOwnState> {
   }
 }
 
-export default withStyles(styles)(ItemCard);
+export default ItemCard;
 
