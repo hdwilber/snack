@@ -4,10 +4,6 @@ import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import Avatar from 'material-ui/Avatar';
 
-import GridList, {GridListTile, GridListTileBar}from 'material-ui/GridList'
-import IconButton from 'material-ui/IconButton'
-
-import AddIcon from 'material-ui-icons/Add'
 
 interface IOwnProps {
   data: any;
@@ -43,35 +39,6 @@ class ItemCard extends React.Component <IOwnProps, IOwnState> {
     super(props);
   }
 
-  renderImages() {
-    if (this.props.data.images != null) {
-      return (
-        <GridList cellHeight={160} cols={2} spacing={15}>
-        {this.props.data.images.map((val, i) => {
-          return (
-           <GridListTile style={{hover: {marginBottom: '50px'}}} key={i} cols={(i==0)?2:1}>
-             <img src={val} />
-             <GridListTileBar
-               title={i}
-               titlePosition="bottom"
-               actionIcon={
-                 <IconButton>
-                   <AddIcon color="white" />
-                 </IconButton>
-               }
-               actionPosition="right"
-             />
-
-           </GridListTile>
-          )
-        })
-        }
-        </GridList>
-        );
-    }
-  }
-
-
   render() {
     console.log(this.props.data);
     const classes = this.props.classes;
@@ -88,7 +55,11 @@ class ItemCard extends React.Component <IOwnProps, IOwnState> {
           />
           {
           (this.props.data.images.length > 0) &&
-            this.renderImages()
+            <ul className={classes.gallery}>
+            <li className={classes.galleryItem}>
+            <img className={classes.galleryImage} src={this.props.data.images[0]}/>
+            </li>
+            </ul>
           }
           <CardContent>
             <Typography component="p">

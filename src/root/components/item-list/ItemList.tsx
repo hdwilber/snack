@@ -60,7 +60,7 @@ class ItemList extends React.Component< IOwnProps & IConnDispatches & IConnProps
   componentWillReceiveProps(nextprops) {
     console.log(nextprops);
   }
-  renderItems() {
+  renderImages() {
     if (this.state.items != null) {
       return this.state.items.map( (val, i) =>  <ItemCard data={val} key={i} /> );
     }
@@ -70,7 +70,7 @@ class ItemList extends React.Component< IOwnProps & IConnDispatches & IConnProps
     return (
       <Grid container align="center" justify="center">
       <Grid item sm={8} md={6}>
-      {this.renderItems()}
+      {this.renderImages()}
       </Grid>
       </Grid>
 
