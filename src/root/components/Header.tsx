@@ -93,6 +93,12 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
           >
             <MenuIcon/>
           </IconButton>
+          <Typography title="Hola">
+            <a href={"http://localhost:3100/auth/facebook"} target="_blank">
+              Facebook
+            </a>
+          </Typography>
+
           <Typography style={{flex: 1}} type="title" color='inherit' >
             <Link style={{color: "white"}} to="/">
               Snack

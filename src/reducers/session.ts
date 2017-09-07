@@ -2,32 +2,32 @@ import { combineReducers } from 'redux';
 import { handleActions, Action } from 'redux-actions';
 
 import { 
-  USER_DEFAULT_STATE, 
-  USER_LOGIN_SUCCESS, 
-  USER_LOGIN_FAILED, 
-  USER_LOGIN, 
-  USER_LOGOUT,
-  USER_LOGOUT_SUCCESS,
-  USER_LOGOUT_FAILED,
 
-  USER_CHANGED,
-  IUserState
+  SESSION_START,
+  SESSION_START_FAILED,
+  SESSION_END,
+  SESSION_END_FAILED,
+  SESSION_RESTORE,
+  SESSION_RESTORE_FAILED,
+  SESSION_CHANGE,
+
+  SESSION_ERROR,
+  SESSION_DEFAULT_STATE.
+  ISession,
+
 } from '../states';
 
 
 
-export const userReducer = handleActions<IUserState, any>({
-  [USER_LOGIN]: (state: IUserState, action: Action<USER_LOGIN>): IUserState => {
+export const sessionReducer = handleActions<ISession, any>({
+  [SESSION_START]: (state: ISession, action: Action<SESION_START>): ISession => {
+    const { payload } = action;
     return {
       ...state,
-      provider: action.payload.provider,
-      id:null,
-      email: null,
-      displayName: null,
-      photoUrl: null,
+      provider: payload.provider,
     }
   },
-  [USER_LOGIN_SUCCESS]: (state: IUserState, action: Action<USER_LOGIN_SUCCESS>): IUserState => {
+  [SESSION_CHANGE]: (state: IUserState, action: Action<USER_LOGIN_SUCCESS>): IUserState => {
     return {
       ...state,
       id: action.payload.uid,

@@ -16,6 +16,7 @@ import Typography from 'material-ui/Typography';
 import PersonIcon from 'material-ui-icons/Person';
 import AddIcon from 'material-ui-icons/Add';
 import blue from 'material-ui/colors/blue';
+import * as hello from 'hellojs'
 
 
 const styles = {
@@ -28,6 +29,7 @@ interface IOwnProps {
   classes: any;
   onRequestClose: (string) => void;
   selectedValue: any;
+  providers: any;
 };
 
 interface IConnProps {
@@ -36,6 +38,7 @@ interface IConnProps {
 interface IConnDispatches {
 };
 interface IOwnState {
+  show: boolean;
 };
 
 function mapStateToProps(state) {
@@ -47,13 +50,15 @@ function mapDispatchesToProps(dispatch) {
   }
 };
 
-const providers = ['google.com', 'facebook.com'];
 class DialogLogin extends React.Component<IOwnProps & IConnDispatches & IConnProps, IOwnState> {
   constructor(props) {
     super(props)
+    this.state = {
+      show: false
+    }
   }
   handleRequestClose = () => {
-    this.props.onRequestClose(this.props.selectedValue);
+    this.props.onRequestClose(null);
   };
 
   handleListItemClick = value => {
@@ -61,24 +66,25 @@ class DialogLogin extends React.Component<IOwnProps & IConnDispatches & IConnPro
   };
 
   render() {
-    const { onRequestClose, selectedValue, ...other } = this.props;
+    const { providers,  onRequestClose, selectedValue, ...other } = this.props;
     return (
         <Dialog onRequestClose={this.handleRequestClose} {...other}>
         <DialogTitle>Log In</DialogTitle>
         <div>
           <List>
             {providers.map(provider =>
-              <ListItem button onClick={() => this.handleListItemClick(provider)} key={provider}>
+              <ListItem button onClick={() => this.handleListItemClick(provider.name)} key={provider.name}>
                 <ListItemAvatar>
                   <Avatar className={styles.avatar}>
                     <PersonIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={provider} />
+                <ListItemText primary={provider.name} />
               </ListItem>,
             )}
           </List>
         </div>
+        {(this.state.show) ? (<iframe src="http://localhost:3100/auth/facebook" />):(<span/>)}
       </Dialog>
     );
   }

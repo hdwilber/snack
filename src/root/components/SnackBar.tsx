@@ -10,12 +10,14 @@ import {
 import Paper from 'material-ui/Paper'
 import Header from './Header';
 
-import {userLogin, userLogout} from '../../actions/user'
+import {PROVIDERS, userLogin, userLogout} from '../../actions/user'
 
 import DialogItemCreate from './partials/DialogItemCreate';
 import DialogLogin from './partials/DialogLogin';
 import {citemCreate, citemSave, citemRemove, citemUpload} from '../../actions/item';
 import ItemList from './item-list/ItemList'
+
+import RestService from '../../services';
 
 
 interface IOwnProps {
@@ -68,6 +70,7 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
     };
     console.log("Constructor de snackBar")
     console.log(props);
+    console.log(RestService)
   }
 
   componentWillReceiveProps(nextprops) {
@@ -129,6 +132,7 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
         <DialogLogin
           open={this.state.viewDialogLogin}
           onRequestClose={this.handleDialogLoginClose}
+          providers={PROVIDERS}
           />
 
 
