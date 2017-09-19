@@ -1,31 +1,35 @@
-export const ITEM_CREATE = 'Item/CREATE';
-export const ITEM_RETRIEVE = 'Item/RETRIEVE';
-export const ITEM_RETRIEVE_ALL = 'Item/RETRIEVE_ALL';
-export const ITEM_UPDATE = 'Item/UPDATE';
-export const ITEM_REMOVE = 'Item/REMOVE';
-export const ITEM_CHANGED = 'Item/CHANGED';
-export const ITEM_ERROR = 'Item/ERROR';
-export const ITEM_REMOVED = 'Item/REMOVED';
+export const INVENTORY_CREATE = 'Item/CREATE';
+export const INVENTORY_RETRIEVE = 'Item/RETRIEVE';
+export const INVENTORY_RETRIEVE_ALL = 'Item/RETRIEVE_ALL';
+export const INVENTORY_UPDATE = 'Item/UPDATE';
+export const INVENTORY_REMOVE = 'Item/REMOVE';
+export const INVENTORY_CHANGED = 'Item/CHANGED';
+export const INVENTORY_ERROR = 'Item/ERROR';
+export const INVENTORY_REMOVED = 'Item/REMOVED';
 
-export interface IItem {
+export interface IInventory{
   id: string;
   name: string;
   description: string;
   userId: string;
-  images: Array<string>;
   list?: Array<any>;
   error: any;
-}
+};
 
-export const ITEM_DEFAULT: IItem = null;
-export interface ITEM_CHANGED {
+export interface IInventoryItem {
+
+};
+
+export const IInventory : IInventory = null;
+export const IInventoryItem: IInventoryItem = null;
+
+export interface INVENTORY_CHANGED {
   id: string;
   name: string;
   description: string;
-  images: Array<string>;
 };
 
-export interface ITEM_ERROR {
+export interface INVENTORY_ERROR {
   code: number;
   message: string;
 };

@@ -1,47 +1,82 @@
-import { ISession } from '../states/user';
+import { ISession } from '../states/session';
 import {connect} from 'react-redux'
 
-interface IOwnProps {
-};
-interface IConnProps {
-  session;
-};
-interface IConnDispatches {
-};
-interface IOwnState {
-};
-
-function mapStateToProps(state) {
-  return {
-    session: state.user.session
-  };
-};
-function mapDispatchesToProps(dispatch) {
-  return {
-  }
-};
-class _RestService implements IOwnProps, IConnProps{
-  server: 'http://localhost:3100';
-  session: ISession;
+const SERVER = 'http://localhost:3100/api';
+class RestService {
+  public session: ISession;
   
-  constructor() {
+  setSession(session: ISession) {
+    this.session = session;
   }
+
   createHeaders() {
     var headers = new Headers();
     headers.append('content-type', 'application/json');
     if (this.session) {
       headers.append('Authorization', this.session.id )
     }
+    return headers;
   }
   createUploadHeaders() {
   }
+}
 
-  componentWillReceiveProps(nextProps) {
-    console.log('HOLASDFAS')
-    console.log(nextProps);
+
+const ITEMS_PATHNAME = 'Items';
+
+export class ItemService extends RestService {
+
+  create(userId) {
+    const data = {
+      userId: userId
+    };
+    return fetch (
+      `${SERVER}/${ITEMS_PATHNAME}`,
+      {
+        headers: this.createHeaders(),
+        method: 'POST',
+        body: JSON.stringify(data)
+      }
+    );
+  }
+  getAll() {
+    return fetch (`${SERVER}/${ITEMS_PATHNAME}`,
+                 {headers: this.createHeaders,
+                  method: 'GET', 
+                 }
+    )
+  }
+  get(id) {
+    return fetch (`${SERVER}/${ITEMS_PATHNAME}`,
+                 {headers: this.createHeaders,
+                  method: 'GET', 
+                 }
+    )
+  }
+  update(data) {
+    if (data && data.id) {
+      return fetch (
+        `${SERVER}/${ITEMS_PATHNAME}/${data.id}`,
+        {
+          headers: this.createHeaders(),
+          method: 'PATCH',
+          body: JSON.stringify(data)
+        }
+      );
+    }
+  }
+
+  remove(id) {
+    if (id) {
+      return fetch (
+        `${SERVER}/${ITEMS_PATHNAME}/${id}`,
+        {
+          headers: this.createHeaders(),
+          method: 'DELETE'
+        }
+      );
+    }
   }
 }
 
-var RestService = new connect(mapStateToProps, mapDispatchesToProps) (_RestService);
-export default RestService;
 

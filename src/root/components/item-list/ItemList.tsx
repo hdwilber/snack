@@ -8,11 +8,8 @@ import {
 } from 'react-router-dom'
 
 import Grid from 'material-ui/Grid'
-import {userLogin, userLogout} from '../../../actions/user'
 
 import ItemCard from './partials/ItemCard'
-import firebase from './../../../common/firebase'
-
 
 interface IOwnProps {
 };
@@ -42,19 +39,19 @@ class ItemList extends React.Component< IOwnProps & IConnDispatches & IConnProps
 
   }
   componentDidMount () {
-    var itemsRef = firebase.database().ref('items');
-    itemsRef.once('value')
-    .then(snap => {
-      console.log(snap);
-      var nits= [];
-      snap.forEach((v, i) => {
-        let aux = v.val();
-        nits.push({...aux, id: v.key, images: (aux.images != null ? aux.images : [] ) });
-        this.setState({
-          items: nits
-        })
-      });
-    });
+    //var itemsRef = firebase.database().ref('items');
+    //itemsRef.once('value')
+    //.then(snap => {
+      //console.log(snap);
+      //var nits= [];
+      //snap.forEach((v, i) => {
+        //let aux = v.val();
+        //nits.push({...aux, id: v.key, images: (aux.images != null ? aux.images : [] ) });
+        //this.setState({
+          //items: nits
+        //})
+      //});
+    //});
   }
 
   componentWillReceiveProps(nextprops) {

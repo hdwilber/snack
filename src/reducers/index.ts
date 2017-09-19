@@ -1,16 +1,19 @@
 import { combineReducers } from 'redux';
 
 import {appReducer} from './app';
-import {userReducer} from './user';
-import {fileUploadReducer} from './file';
-import {currentItemReducer, itemCreateReducer, itemSaveReducer} from './item'
+import {sessionReducer} from './session';
+import {itemReducer} from './item';
+//import {currentItemReducer, itemCreateReducer, itemSaveReducer} from './item'
+//import {fileUploadReducer} from './file';
 
 export default combineReducers<any>({
   app: appReducer,
-  user: userReducer,
-  fileUpload: fileUploadReducer,
-  itemCreate: itemCreateReducer,
-  itemSave: itemSaveReducer,
-  currentItem: currentItemReducer
+  session: sessionReducer,
+  item: itemReducer, 
+
+  //fileUpload: fileUploadReducer,
+  //itemCreate: itemCreateReducer,
+  //itemSave: itemSaveReducer,
+  //currentItem: currentItemReducer
 });
 

@@ -28,7 +28,7 @@ import AddBoxIcon from 'material-ui-icons/AddBox'
 import SettingsIcon from 'material-ui-icons/Settings'
 
 interface IOwnProps {
-  user: any;
+  session: any;
   onItemCreate: ()=>void;
   onLogin: ()=> void;
   onLogout: () => void;
@@ -73,16 +73,16 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
   }
 
   renderUserMenu() {
-    var userMenu; 
-    if (this.props.user != null) {
-      userMenu = 
-        <UserMenu user={this.props.user} onLogout={this.handleLogout}/>
+    if (this.props.session && !this.props.session.error) {
+      return (
+        <UserMenu user={this.props.session.profile} onLogout={this.handleLogout}/>
+      );
     }
     else {
-      userMenu = 
+      return (
         <Button color="contrast" onClick={this.props.onLogin}>Login</Button>
+      );
     }
-    return userMenu;
   }
   renderTopBar() {
     return (
@@ -105,12 +105,13 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
             </Link>
           </Typography>
           {
-            (this.props.user != null) &&
+            (this.props.session && !this.props.session.error) &&  (
             <IconButton color='contrast' aria-label="Create a new Item"
             onClick={this.props.onItemCreate}
             >
               <AddBoxIcon/>
             </IconButton>
+            )
           }
 
           <IconButton 
@@ -126,6 +127,7 @@ class Header extends React.Component<IOwnProps & IConnProps & IConnDispatches, I
       </AppBar>
     );
   }
+
   renderSideMenu() {
     return ( 
       <Drawer 

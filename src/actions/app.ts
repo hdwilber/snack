@@ -1,5 +1,5 @@
 import { Action } from 'redux-actions';
-import firebase from '../common/firebase'
+//import firebase from '../common/firebase'
 import {
   IAppState,
   PAGE_LOAD

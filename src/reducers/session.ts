@@ -4,15 +4,12 @@ import { handleActions, Action } from 'redux-actions';
 import { 
 
   SESSION_START,
-  SESSION_START_FAILED,
   SESSION_END,
-  SESSION_END_FAILED,
   SESSION_RESTORE,
-  SESSION_RESTORE_FAILED,
-  SESSION_CHANGE,
-
+  SESSION_CHANGED,
+  SESSION_REMOVED,
   SESSION_ERROR,
-  SESSION_DEFAULT_STATE.
+  SESSION_DEFAULT,
   ISession,
 
 } from '../states';
@@ -20,77 +17,56 @@ import {
 
 
 export const sessionReducer = handleActions<ISession, any>({
-  [SESSION_START]: (state: ISession, action: Action<SESION_START>): ISession => {
-    const { payload } = action;
+  [SESSION_START]: (state: ISession, action: Action<SESSION_START>): ISession => {
     return {
       ...state,
-      provider: payload.provider,
+      provider: action.provider,
     }
   },
-  [SESSION_CHANGE]: (state: IUserState, action: Action<USER_LOGIN_SUCCESS>): IUserState => {
+  [SESSION_CHANGED]: (state: ISession, action: Action<SESSION_CHANGED>): ISession => {
     return {
       ...state,
-      id: action.payload.uid,
-      email: action.payload.email,
-      displayName: action.payload.displayName,
-      photoUrl: action.payload.photoUrl,
-      provider: action.payload.provider
+      profile: {
+        id: action.uid,
+        email: action.email,
+        displayName: action.displayName,
+        photoUrl: action.photoUrl,
+        provider: action.provider,
+        error: null
+      }
     }
   },
-  [USER_LOGIN_FAILED]: (state: IUserState, action: Action<USER_LOGIN_FAILED>): IUserState => {
+  [SESSION_ERROR]: (state: ISession, action: Action<SESSION_ERROR>): ISession => {
     return {
       ...state,
       error: {
-        code: action.payload.code,
-        message: action.payload.message
+        code: action.code,
+        message: action.message
       }
     }
   },
 
-  [USER_LOGOUT]: (state:IUserState, action: Action<USER_LOGOUT>): IUserState=> {
-    return  {
-      ...state,
-    };
+  [SESSION_REMOVED]: (state: ISession, action: Action<SESSION_REMOVED>): ISession => {
+    return  null;
   },
-  [USER_LOGOUT_SUCCESS]: (state: IUserState, action: Action<USER_LOGOUT>): IUserState => {
-    return null;
-  },
-  [USER_LOGOUT_FAILED]: (state: IUserState, action: Action<USER_LOGOUT_FAILED>): IUserState => {
-    return {
-      ...state,
-      logout: false,
-      error: {
-        code: action.payload.code,
-        message: action.payload.message
-      }
-    }
-  },
-  [USER_CHANGED] : (state: IUserState, action: Action<USER_CHANGED> ) : IUserState=> {
-    console.log('Entering user changed')
-    console.log(action.payload.user)
-    const session = action.payload.response;
+
+  [SESSION_CHANGED] : (state: ISession, action: Action<SESSION_CHANGED> ) : ISession => {
+    const { session } = action;
     return {
       ...state,
       id: session.id,
-      email: session.profile.emails[0].value,
-      displayName: session.profile.displayName,
-      photoUrl: session.profile.photos[0].value,
-      provider: session.profile.provider,
-      session: {
-        id: session.id,
-        userId: session.userId,
-        ttl: session.ttl,
-        profile: {
-          id: session.profile.id,
-          email: session.profile.emails[0].value,
-          displayName: session.profile.displayName,
-          photoUrl: session.profile.photos[0].value,
-          provider: session.profile.provider
-        },
+      userId: session.userId,
+      ttl: session.ttl,
+      profile: {
+        id: session.profile.id,
+        email: session.profile.emails[0].value,
+        displayName: session.profile.displayName,
+        photoUrl: session.profile.photos[0].value,
+        provider: session.profile.provider,
         error: null,
       },
       error: null
     }
   }
-}, null);
+}, SESSION_DEFAULT);
 

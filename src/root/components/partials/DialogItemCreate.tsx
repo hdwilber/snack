@@ -22,8 +22,7 @@ import IconButton from 'material-ui/IconButton'
 import {FormGroup, FormLabel, FormControlLabel} from 'material-ui/Form'
 import Checkbox from 'material-ui/Checkbox'
 
-import {fileUpload} from './../../../actions/file'
-//import {itemCreate, itemSave} from './../../../actions/item'
+//import {fileUpload} from './../../../actions/file'
 
 import Typography from 'material-ui/Typography' 
 import MenuIcon from 'material-ui-icons/Menu'
@@ -33,7 +32,7 @@ interface IOwnProps {
   onRequestClose: (string, any) => void;
   onFilesUpload: (files: FileList) => void;
   open: boolean;
-  user: any;
+  session: any;
   item: any;
 };
 interface IOwnState {

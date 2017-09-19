@@ -10,11 +10,24 @@ import {
 import Paper from 'material-ui/Paper'
 import Header from './Header';
 
-import {PROVIDERS, userLogin, userLogout} from '../../actions/user'
+import {
+  PROVIDERS, 
+  sessionStart, 
+  sessionRestore,
+  sessionEnd
+} from '../../actions/session';
+
+import {
+  itemCreate,
+  itemRemove, 
+  itemUpdate, 
+  itemRetrieve,
+  itemRetrieveAll,
+} from '../../actions/item';
 
 import DialogItemCreate from './partials/DialogItemCreate';
 import DialogLogin from './partials/DialogLogin';
-import {citemCreate, citemSave, citemRemove, citemUpload} from '../../actions/item';
+//import {citemCreate, citemSave, citemRemove, citemUpload} from '../../actions/item';
 import ItemList from './item-list/ItemList'
 
 import RestService from '../../services';
@@ -24,16 +37,21 @@ interface IOwnProps {
   children: any;
 };
 interface IConnProps {
-  user: any;
+  session: any;
   item: any;
 };
 interface IConnDispatches {
-  userLogin: (string)=>void;
-  userLogout: () => void;
-  createItem: () =>void;
-  saveItem: (any) => void;
-  removeItem: () => void;
-  uploadFilesToItem: (FileList) => void;
+  sessionStart : (string) => void,
+  sessionRestore : () => void,
+  sessionEnd: () => void,
+  itemCreate: () => void,
+  itemUpdate: (data) => void,
+  itemRemove: (id) => void,
+  itemRetrieveAll: () => void,
+  //createItem: () =>void;
+  //saveItem: (any) => void;
+  //removeItem: () => void;
+  //uploadFilesToItem: (FileList) => void;
 };
 interface IOwnState {
   viewDialogItemCreate: boolean;
@@ -42,22 +60,27 @@ interface IOwnState {
 
 function mapStateToProps(state) {
   return {
-    user: state.user,
+    session: state.session,
     item: state.currentItem
 
   };
 };
 function mapDispatchesToProps(dispatch) {
   return {
-    userLogin: (p: string) => dispatch(
-      userLogin(p)),
-    userLogout: () => dispatch(
-      userLogout()
-      ),
-    createItem: () => dispatch(citemCreate()),
-    saveItem: (data) => dispatch(citemSave(data)),
-    removeItem: () => dispatch(citemRemove()),
-    uploadFilesToItem: (d: FileList) => dispatch(citemUpload(d))
+    sessionStart: (p: string) => dispatch(
+      sessionStart(p)),
+    sessionRestore: () => dispatch( sessionRestore() ),
+    sessionEnd: () => dispatch (sessionEnd()),
+    itemCreate: () => dispatch(itemCreate()),
+    itemUpdate: (data) => dispatch(itemUpdate(data)),
+    itemDelete: (id) => dispatch(itemRemove(id)),
+    itemRetrieveAll: () => dispatch(itemRetrieveAll()),
+
+
+    //createItem: () => dispatch(citemCreate()),
+    //saveItem: (data) => dispatch(citemSave(data)),
+    //removeItem: () => dispatch(citemRemove()),
+    //uploadFilesToItem: (d: FileList) => dispatch(citemUpload(d))
   }
 };
 
@@ -68,9 +91,7 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
       viewDialogItemCreate: false,
       viewDialogLogin: false 
     };
-    console.log("Constructor de snackBar")
-    console.log(props);
-    console.log(RestService)
+    props.sessionRestore();
   }
 
   componentWillReceiveProps(nextprops) {
@@ -79,23 +100,23 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
   handleDialogItemCreateClose = (value, data) => {
     this.setState({ viewDialogItemCreate: false });
     if (this.props.item != null && value === 'save') {
-      this.props.saveItem(data);
+      //this.props.saveItem(data);
       console.log('Saving...')
     }  else {
       console.log('discard')
-      this.props.removeItem();
+      //this.props.removeItem();
     }
   }
   handleDialogItemCreateUpload = (files: FileList) => {
-    this.props.uploadFilesToItem(files);
+    //this.props.uploadFilesToItem(files);
   }
   handleDialogLoginClose = value => {
     this.setState({viewDialogLogin: false});
-    this.props.userLogin(value);
+    this.props.sessionStart(value);
   }
 
   handleLogout = () => {
-    this.props.userLogout();
+    this.props.sessionEnd();
   }
   handleLogin = () => {
     this.setState({
@@ -104,8 +125,9 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
   }
 
   handleItemCreate = () => {
-    if (this.props.user != null) {
-      this.props.createItem();
+    if (this.props.session && !this.props.session.error ) {
+      //this.props.itemCreate();
+      this.props.itemRetrieveAll();
       this.setState({viewDialogItemCreate: true})
     }
   }
@@ -118,17 +140,16 @@ class SnackBar extends React.Component< IOwnProps & IConnDispatches & IConnProps
           onItemCreate={this.handleItemCreate}
           onLogout={this.handleLogout}
           onLogin={this.handleLogin}
-          user={this.props.user}
+          session={this.props.session}
         />
-          <DialogItemCreate 
-            open={this.state.viewDialogItemCreate}
-            onRequestClose={this.handleDialogItemCreateClose}
-            onFilesUpload={this.handleDialogItemCreateUpload}
-            user={this.props.user}
-            item={this.props.item}
 
-            />
-        
+        <DialogItemCreate 
+          open={this.state.viewDialogItemCreate}
+          onRequestClose={this.handleDialogItemCreateClose}
+          onFilesUpload={this.handleDialogItemCreateUpload}
+          session={this.props.session}
+          item={this.props.item}
+        />
         <DialogLogin
           open={this.state.viewDialogLogin}
           onRequestClose={this.handleDialogLoginClose}
